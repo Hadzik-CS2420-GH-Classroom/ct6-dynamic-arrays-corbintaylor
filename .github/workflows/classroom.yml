@@ -1,0 +1,339 @@
+name: Autograding Tests
+on:
+  - push
+  - repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Build Project
+      continue-on-error: true
+      run: |
+        cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+        cmake --build build --config Release
+
+    - name: Build Check (2 points)
+      id: build
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Build Check (2 points)
+        setup-command: ''
+        command: |
+          if [ -f build/run_tests ]; then
+            echo "Build successful"
+          else
+            echo "Build failed" && exit 1
+          fi
+        timeout: 10
+        max-score: 2
+
+    # ==================== new_and_delete Tests (14 points) ====================
+
+    - name: Heap Array Created (3 points)
+      id: heap-array
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Heap Array Created (3 points)
+        setup-command: ''
+        command: |
+          if [ -f build/run_tests ]; then
+            cd build && ./run_tests --gtest_filter=NewAndDeleteTest.HeapArrayCreated
+          else
+            exit 1
+          fi
+        timeout: 10
+        max-score: 3
+
+    - name: Array Memory Freed (3 points)
+      id: array-freed
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Array Memory Freed (3 points)
+        setup-command: ''
+        command: |
+          if [ -f build/run_tests ]; then
+            cd build && ./run_tests --gtest_filter=NewAndDeleteTest.ArrayMemoryFreed
+          else
+            exit 1
+          fi
+        timeout: 10
+        max-score: 3
+
+    - name: Smart Value Created (2 points)
+      id: smart-value
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Smart Value Created (2 points)
+        setup-command: ''
+        command: |
+          if [ -f build/run_tests ]; then
+            cd build && ./run_tests --gtest_filter=NewAndDeleteTest.SmartValueCreated
+          else
+            exit 1
+          fi
+        timeout: 10
+        max-score: 2
+
+    - name: Smart Array Created (2 points)
+      id: smart-array
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Smart Array Created (2 points)
+        setup-command: ''
+        command: |
+          if [ -f build/run_tests ]; then
+            cd build && ./run_tests --gtest_filter=NewAndDeleteTest.SmartArrayCreated
+          else
+            exit 1
+          fi
+        timeout: 10
+        max-score: 2
+
+    - name: Shared Ptr Value (3 points)
+      id: shared-value
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Shared Ptr Value (3 points)
+        setup-command: ''
+        command: |
+          if [ -f build/run_tests ]; then
+            cd build && ./run_tests --gtest_filter=NewAndDeleteTest.SharedPtrValue
+          else
+            exit 1
+          fi
+        timeout: 10
+        max-score: 3
+
+    - name: Shared Ptr Reference Count (1 point)
+      id: shared-refcount
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Shared Ptr Reference Count (1 point)
+        setup-command: ''
+        command: |
+          if [ -f build/run_tests ]; then
+            cd build && ./run_tests --gtest_filter=NewAndDeleteTest.SharedPtrRefCount
+          else
+            exit 1
+          fi
+        timeout: 10
+        max-score: 1
+
+    # ==================== dynamic_arrays Tests (22 points) ====================
+
+    - name: Empty Array Created (2 points)
+      id: empty-arr
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Empty Array Created (2 points)
+        setup-command: ''
+        command: |
+          if [ -f build/run_tests ]; then
+            cd build && ./run_tests --gtest_filter=DynamicArraysTest.EmptyArrayCreated
+          else
+            exit 1
+          fi
+        timeout: 10
+        max-score: 2
+
+    - name: Three Elements Added (3 points)
+      id: three-added
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Three Elements Added (3 points)
+        setup-command: ''
+        command: |
+          if [ -f build/run_tests ]; then
+            cd build && ./run_tests --gtest_filter=DynamicArraysTest.ThreeElementsAdded
+          else
+            exit 1
+          fi
+        timeout: 10
+        max-score: 3
+
+    - name: Array Full (2 points)
+      id: arr-full
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Array Full (2 points)
+        setup-command: ''
+        command: |
+          if [ -f build/run_tests ]; then
+            cd build && ./run_tests --gtest_filter=DynamicArraysTest.ArrayFull
+          else
+            exit 1
+          fi
+        timeout: 10
+        max-score: 2
+
+    - name: New Capacity Doubled (3 points)
+      id: cap-doubled
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: New Capacity Doubled (3 points)
+        setup-command: ''
+        command: |
+          if [ -f build/run_tests ]; then
+            cd build && ./run_tests --gtest_filter=DynamicArraysTest.NewCapacityDoubled
+          else
+            exit 1
+          fi
+        timeout: 10
+        max-score: 3
+
+    - name: Elements Copied (3 points)
+      id: elems-copied
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Elements Copied (3 points)
+        setup-command: ''
+        command: |
+          if [ -f build/run_tests ]; then
+            cd build && ./run_tests --gtest_filter=DynamicArraysTest.ElementsCopied
+          else
+            exit 1
+          fi
+        timeout: 10
+        max-score: 3
+
+    - name: Resized Correctly (4 points)
+      id: resized
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Resized Correctly (4 points)
+        setup-command: ''
+        command: |
+          if [ -f build/run_tests ]; then
+            cd build && ./run_tests --gtest_filter=DynamicArraysTest.ResizedCorrectly
+          else
+            exit 1
+          fi
+        timeout: 10
+        max-score: 4
+
+    - name: Added After Resize (3 points)
+      id: after-resize
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Added After Resize (3 points)
+        setup-command: ''
+        command: |
+          if [ -f build/run_tests ]; then
+            cd build && ./run_tests --gtest_filter=DynamicArraysTest.AddedAfterResize
+          else
+            exit 1
+          fi
+        timeout: 10
+        max-score: 3
+
+    - name: Dynamic Array Memory Freed (2 points)
+      id: dyn-freed
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Dynamic Array Memory Freed (2 points)
+        setup-command: ''
+        command: |
+          if [ -f build/run_tests ]; then
+            cd build && ./run_tests --gtest_filter=DynamicArraysTest.MemoryFreed
+          else
+            exit 1
+          fi
+        timeout: 10
+        max-score: 2
+
+    # ==================== two_dimensional_arrays Tests (12 points) ====================
+
+    - name: Dynamic 2D Array Printed (4 points)
+      id: dyn-2d-print
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Dynamic 2D Array Printed (4 points)
+        setup-command: ''
+        command: |
+          if [ -f build/run_tests ]; then
+            cd build && ./run_tests --gtest_filter=TwoDimensionalArraysTest.Dynamic2DArrayPrinted
+          else
+            exit 1
+          fi
+        timeout: 10
+        max-score: 4
+
+    - name: Dynamic 2D Array Freed (2 points)
+      id: dyn-2d-freed
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Dynamic 2D Array Freed (2 points)
+        setup-command: ''
+        command: |
+          if [ -f build/run_tests ]; then
+            cd build && ./run_tests --gtest_filter=TwoDimensionalArraysTest.Dynamic2DArrayFreed
+          else
+            exit 1
+          fi
+        timeout: 10
+        max-score: 2
+
+    - name: Flat Array as 2D (4 points)
+      id: flat-2d
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Flat Array as 2D (4 points)
+        setup-command: ''
+        command: |
+          if [ -f build/run_tests ]; then
+            cd build && ./run_tests --gtest_filter=TwoDimensionalArraysTest.FlatArrayAs2D
+          else
+            exit 1
+          fi
+        timeout: 10
+        max-score: 4
+
+    - name: Flat Array Freed (2 points)
+      id: flat-freed
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Flat Array Freed (2 points)
+        setup-command: ''
+        command: |
+          if [ -f build/run_tests ]; then
+            cd build && ./run_tests --gtest_filter=TwoDimensionalArraysTest.FlatArrayFreed
+          else
+            exit 1
+          fi
+        timeout: 10
+        max-score: 2
+
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        BUILD_RESULTS: "${{steps.build.outputs.result}}"
+        HEAP-ARRAY_RESULTS: "${{steps.heap-array.outputs.result}}"
+        ARRAY-FREED_RESULTS: "${{steps.array-freed.outputs.result}}"
+        SMART-VALUE_RESULTS: "${{steps.smart-value.outputs.result}}"
+        SMART-ARRAY_RESULTS: "${{steps.smart-array.outputs.result}}"
+        SHARED-VALUE_RESULTS: "${{steps.shared-value.outputs.result}}"
+        SHARED-REFCOUNT_RESULTS: "${{steps.shared-refcount.outputs.result}}"
+        EMPTY-ARR_RESULTS: "${{steps.empty-arr.outputs.result}}"
+        THREE-ADDED_RESULTS: "${{steps.three-added.outputs.result}}"
+        ARR-FULL_RESULTS: "${{steps.arr-full.outputs.result}}"
+        CAP-DOUBLED_RESULTS: "${{steps.cap-doubled.outputs.result}}"
+        ELEMS-COPIED_RESULTS: "${{steps.elems-copied.outputs.result}}"
+        RESIZED_RESULTS: "${{steps.resized.outputs.result}}"
+        AFTER-RESIZE_RESULTS: "${{steps.after-resize.outputs.result}}"
+        DYN-FREED_RESULTS: "${{steps.dyn-freed.outputs.result}}"
+        DYN-2D-PRINT_RESULTS: "${{steps.dyn-2d-print.outputs.result}}"
+        DYN-2D-FREED_RESULTS: "${{steps.dyn-2d-freed.outputs.result}}"
+        FLAT-2D_RESULTS: "${{steps.flat-2d.outputs.result}}"
+        FLAT-FREED_RESULTS: "${{steps.flat-freed.outputs.result}}"
+      with:
+        runners: build,heap-array,array-freed,smart-value,smart-array,shared-value,shared-refcount,empty-arr,three-added,arr-full,cap-doubled,elems-copied,resized,after-resize,dyn-freed,dyn-2d-print,dyn-2d-freed,flat-2d,flat-freed
