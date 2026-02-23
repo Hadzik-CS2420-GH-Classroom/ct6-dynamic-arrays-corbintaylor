@@ -47,11 +47,9 @@ void twoDimensionalArrays() {
     //   So you follow two pointers to reach a value — see the diagram above.
 
     // ? SEE DIAGRAM: images/two_d_spine.png — what the spine allocation looks like
-    //
-    // TODO: Allocate an array of int* pointers with 'rows' elements
-    //       Store it in int** called 'table'
-    //       Hint: int** table = new int*[rows];
-    //
+
+    int** table = new int*[rows];
+
     // ! DISCUSSION: What does new int*[rows] allocate?
     //   It allocates an array of 'rows' pointers on the heap.
     //   Each pointer is uninitialized — they don't point anywhere yet.
