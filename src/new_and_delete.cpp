@@ -137,7 +137,7 @@ void newAndDelete() {
     //   2. Exception-safe — no risk of leaking if another argument throws
     //   3. Makes the intent clear: "I want a unique_ptr"
 
-    std::cout << "Smart Value: " << *smartValue << std::endl;
+    std::cout << "Smart value: " << *smartValue << std::endl;
 
     // Expected output: "Smart value: 99"
 
